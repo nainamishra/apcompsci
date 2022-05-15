@@ -1,0 +1,105 @@
+MyProgram.java:
+--------------
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
+public class MyProgram {
+    // main
+    public static void main(String[] args) throws FileNotFoundException {
+        
+        // set up a file object
+        File data = new File("cityData.txt");
+        
+        // set up a scanner object to read from the file
+        Scanner sc = new Scanner(data);
+        
+        // while there is data in the file, get the
+        // next line and read it in as a string.
+        // output the data
+        while (sc.hasNextLine()) {
+                String input = sc.nextLine();
+                char target = input.charAt(input.length()-1);
+                target = Character.toUpperCase(target);
+                input = input.substring(0,input.length()-1);
+                ArrayList <Character> cList = Mississippi.uniqueLetters(input);
+                System.out.println ("Unsorted" + cList);
+                Mississippi.sSort (cList);
+                System.out.println("Sorted" + cList);
+                int pos = Mississippi.bSearch(cList, target);
+                System.out.println("Target " + target + " at pos " + pos + "\n");
+            }
+   
+        sc.close();
+    }
+    
+}
+
+Mississippi.java:
+----------------
+import java.util.*;
+
+public class Mississippi {
+
+    // uniqueLetters method
+    public static ArrayList <Character> uniqueLetters (String s) {
+        ArrayList <Character> unique = new ArrayList <Character>();
+        s = s.toUpperCase();
+
+        for (int i = 0; i < s.length()-1; i++) {
+            int count = 0;
+            for (int j = 0; j < unique.size(); j++) {
+               if (s.charAt(i) == unique.get(j)) {
+                   count++;
+               }
+             }
+            if (count == 0 && s.charAt(i) != ' ') {
+                unique.add(s.charAt(i));
+            }
+        }
+        
+        return unique;
+    }
+    
+    // sSort method
+    public static void sSort (ArrayList<Character> sorted) {
+        for (int j = 0; j < sorted.size() - 1; j++) {
+            int minIndex = j;
+                for (int k = j + 1; k < sorted.size(); k++) {
+                    if (sorted.get(k) < sorted.get(minIndex)) {
+                    minIndex = k;
+                    }
+                }
+            Character temp = sorted.get(j);
+            sorted.set(j, sorted.get(minIndex));
+            sorted.set(minIndex, temp);
+        }
+    }
+
+    // bSearch method
+    public static int bSearch (ArrayList <Character> cList, char target) {
+        for (int i = 0; i < cList.size(); i++) {
+            if (cList.get(i) == target) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+}
+
+cityData.txt:
+------------
+Mississippi M
+Baton Rouge e
+Wilmington g
+boCa RaTon Q
+Staten Island S
+Los Angeles A
+Chicago B
+Philadelphia L
+Poughkeepsie E
+San Antonio o
+San Diego i
+Oklahoma City t
+
