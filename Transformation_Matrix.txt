@@ -1,0 +1,91 @@
+MyProgram.java:
+--------------
+public class MyProgram
+{
+    public static void printArr(int [][] arr){
+        for (int [] row : arr){
+            for (int item : row){
+                //System.out.printf("%4d", item);
+            }
+            //System.out.println();
+        }
+        
+    }
+    public static void main(String[] args)
+    {
+        int [][] m1 = {{1,3,1},{2,4,8}};
+        int [][] m2 = {{6,8,10,6},{5,4,9,8}};
+        int [][] m3 = {{-6,-5,-3,-3,-5},{3,4,4,2,1}};
+        
+        int [][] m4 = Transforms.dilate(m1,4);
+        System.out.println("*** test 1 ***");
+        printArr(m4);
+        
+        int [][] m5 = Transforms.reflect(m2,'x');
+        System.out.println("*** test 2 ***");
+        printArr(m5);
+        
+        int [][] m6 = Transforms.rotate(m3,90);
+        System.out.println("*** test 3 ***");
+        printArr(m6);
+    }
+}
+
+Transforms.java:
+---------------
+public class Transforms {
+    
+    // dilate method
+    public static int [][] dilate (int [][] arr, int s) {
+        int [][] temp = arr;
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                temp [i][j] = arr[i][j] * s;
+            }
+        }
+        return temp;
+    }
+    
+    // mMultiply 
+    public static int [][] mMultiply (int [][] arr, int [][] arr2) {
+        int temp [][] = new int [arr2.length][arr2[0].length];
+        
+        int i = 0;
+        for (int j = 0; j < arr2[0].length; j++) {
+            temp[i][j] = (arr[i][i] * arr2[i][j]) + (arr[i][i+1] * arr2[i+1][j]);
+            temp[i+1][j] = (arr[i+1][i] * arr2[i][j]) + (arr[i+1][i+1] * arr2[i+1][j]);
+        }
+        return temp;    
+    }
+    
+    // rotate
+    public static int [][] rotate (int [][] arr, int rv) {
+        int [][] temp = new int [arr.length][arr[0].length]; 
+        int [][] m90 = {{0, -1}, {1, 0}};
+        int [][] m180 = {{-1,0}, {0,-1}};
+        int [][] m270 = {{0,1}, {-1,0}};
+        
+        if (rv == 90) {
+            temp = Transforms.mMultiply(m90, arr);
+        } else if (rv == 180) {
+            temp = Transforms.mMultiply(m180, arr);
+        } else {
+            temp = Transforms.mMultiply(m270, arr);
+        }
+        return temp;
+    }
+    
+    // reflect
+    public static int [][] reflect (int [][] arr, char vm) {
+        int [][] temp = new int [arr.length][arr[0].length];
+        int [][] x = {{1,0}, {0,-1}};
+        int [][] y = {{-1,0}, {0,1}};
+        if (vm == 'x') {
+            temp = Transforms.mMultiply(x, arr);
+        } else {
+            temp = Transforms.mMultiply(y, arr);
+        }
+        return temp;
+    }
+}
+
