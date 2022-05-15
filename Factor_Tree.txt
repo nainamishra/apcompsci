@@ -1,0 +1,126 @@
+MyProgram.java:
+--------------
+public class MyProgram
+{
+    public static void main(String[] args)
+    {
+        Tree ft = new Tree (49); 
+        ft.printTree();
+        
+        System.out.println("*********");
+        
+        Tree ft2 = new Tree (225); 
+        ft2.printTree();
+    }
+}
+
+Node.java:
+---------
+public class Node {
+    private int data;
+    private Node left;
+    private Node right;
+    
+    public Node (int data){
+        this.data = data;
+        left = null;
+        right = null;
+    }
+    
+    public void addLeft (Node left){
+        this.left = left;
+    }
+    
+    public void addRight (Node right){
+        this.right = right;
+    }
+    
+    public Node getLeft() {return left;}
+    public Node getRight() {return right;}
+    public int getData() { return data;}
+    
+    public String toString(){
+        return ("Data: " + data);
+    }
+}
+
+Tree.java:
+---------
+public class Tree {
+    private Node root;
+
+    public Tree (int num){
+        root = new Node (num);
+        buildTree();
+    }   
+    
+    private boolean isItPrime(int x){
+        boolean prime = true;
+        
+        for (int i = 2; i < x / 2; i++) {
+            if (x % i == 0) {
+                prime = false;
+                return prime;
+            }
+        }
+        return prime;
+    }
+        
+    // returns the smallest factor of x  
+    private int findFactor (int x) {
+        for (int i = 2; i < x / 2; i++) {
+            if (x % i == 0) {
+                return i;
+            }
+        }
+        return 1;    
+    }
+    
+    public void buildTree () {
+        int fact = 0;
+        int num = root.getData();
+
+        if (!isItPrime(num)){
+            fact = findFactor(num);
+            root.addLeft(addNode(fact));
+            root.addRight(addNode(num/fact));
+        }
+    }
+    
+    public Node addNode(int fact) {
+        Node newFactor = new Node(fact);
+        int fact2 = 0;
+        
+        if (isItPrime(fact) == true) {
+            return newFactor;
+        }
+        
+        if (!isItPrime(fact)) {
+            fact2 = findFactor(fact);
+            newFactor.addLeft(addNode(fact2));
+            newFactor.addRight(addNode(fact/fact2));
+        }
+        return newFactor;
+    }
+    
+    public void printTree(){
+        print(root);
+    }
+    
+    // recursive print.
+    // check left, print, check right
+    public void print(Node n){
+        if (n.getLeft() != null) {
+            print(n.getLeft());
+        }
+        
+        System.out.println(n.toString());
+        
+        if (n.getRight() != null) {
+            print(n.getRight());
+        }
+
+    }
+    
+}
+
