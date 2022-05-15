@@ -1,0 +1,274 @@
+AUTester.java:
+-------------
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+public class AUTester {
+    public static void main(String[] args) throws FileNotFoundException 
+    {
+        int size = 16;
+        int [] arr = new int[size];
+        //fill an array with random integers from 1 through 100
+		File data = new File ("data.txt");
+        Scanner sc = new Scanner (data);
+        int count = 0;
+        while (sc.hasNext())
+		{
+			arr[count]=sc.nextInt();
+			count++;
+		}
+	    sc.close();
+		System.out.println("\n **contents of the array**");
+		for(int value:arr)
+			System.out.print(value + " ");
+			
+		System.out.println();
+		//call a static method to find the max
+		//value of the array and print it out
+		//call all other methods.
+		System.out.println("\nThe max is: " + ArrayUtil.findMax(arr));
+		System.out.println("The min is: " + ArrayUtil.findMin(arr));
+		System.out.println("The sum is: " + ArrayUtil.arrSum(arr));
+		System.out.println("The average is: " + ArrayUtil.arrAverage(arr));
+		System.out.println("find duplicate: "+ ArrayUtil.hasDuplicate(arr));
+		System.out.println("find a value 5: "+ ArrayUtil.hasValue(arr, 5)); 
+        System.out.println("find a value -100: "+ ArrayUtil.hasValue(arr, -100));
+		
+		
+		int []rev = ArrayUtil.reverse(arr);
+		System.out.println("\n\n **contents of the reverse array**");
+		for(int value:rev)
+			System.out.print(value+ " ");
+		
+		rev = ArrayUtil.shift(arr, 'l', 2);
+		System.out.println("\n\n **contents of the shift left 2 array**");
+		for(int value:rev)
+			System.out.print(value+ " ");
+		
+		
+		rev = ArrayUtil.shift(arr, 'r', 6);
+		System.out.println("\n\n **contents of the shift right 6 array**");
+		for(int value:rev)
+			System.out.print(value+ " ");
+		
+        rev = ArrayUtil.rotate(arr, 'r', 3);
+		System.out.println("\n\n **contents of the rotate right 3 array**");
+		for(int value:rev)
+			System.out.print(value+ " ");
+                rev = ArrayUtil.rotate(arr, 'r', 3);
+                
+        rev = ArrayUtil.rotate(arr,'l', 4);       
+		System.out.println("\n\n **contents of the rotate left 4 array**");
+		for(int value:rev)
+			System.out.print(value+ " ");
+    }
+    
+}
+
+ArrayUtil.java:
+--------------
+public class ArrayUtil {
+    //static methods to work on an array of integers
+	
+	//return max value of array
+	public static int findMax (int []arr){
+		int max = arr[0];
+		for (int i = 1; i<arr.length;i++){
+			if (arr[i]>max)
+				max=arr[i];
+		}
+		return max;
+	}
+	
+	//return minimum value of array
+	public static int findMin (int []arr){
+		int min = arr[0];
+		for (int i = 1; i<arr.length;i++){
+			if (arr[i]<min)
+				min=arr[i];
+		}
+		return min;
+	}
+	
+	//return the sum of the array
+	public static int arrSum (int []arr){
+		int sum = arr[0];
+		for (int i = 1; i<arr.length;i++){
+			sum += arr[i];
+		}
+		return sum;	
+	}
+	
+	//return the average of the elements
+	//of the array
+	public static double arrAverage(int[] arr){
+        double sum = arr[0];
+		for (int i = 1; i<arr.length;i++){
+			sum += arr[i];
+		}	    
+        double average = sum/arr.length;
+	    return average;
+	}
+	
+	//look for a specific value in an array.
+	//return true if the value exists in the array,
+	//return false if it does not.
+	public static boolean hasValue(int[]arr, int value){
+        for (int i = 1; i<arr.length;i++){
+			if (arr[i] == value) {
+			    return true;
+			}
+		}	
+		return false;
+	}
+	
+	//determines if duplicate values exist
+	//in the array
+	public static boolean hasDuplicate(int[] arr){
+        int value1 = 0;
+        int value2 = 0;
+        
+        for (int i = 0; i<arr.length;i++){
+            value1 = arr[i];
+		    for (int j = 1; j<arr.length;j++){
+			    value2 = arr[j];
+			}
+			
+			if (value1 == value2) {
+			    return true;
+			}
+		}		
+		return false;
+	}
+	
+	//return a new array with reverse order from the original
+	public static int[] reverse (int []arr){
+		int[] temp = new int[arr.length];
+		
+		int j = 0;
+        for (int i = arr.length-1; i >= 0; i--){
+            temp[j] = arr[i];
+            j++;
+        }		
+		return temp;
+	}
+	
+	//return a new array with elements shifted
+	//left or right for a certain number of spaces
+	//precondition: the number of spaces will be less
+	//than or equal to the number of elements in the array.
+	//direction = 'l' for left and 'r' for right
+	public static int[] shift(int[]arr, char direction, int spaces){
+		int[]temp = new int [arr.length];
+		int j = 0;
+		int x = spaces;
+		
+        if (direction == 'l') {
+            for (int i = spaces; i < arr.length; i++){
+                temp[j] = arr[i];
+                j++;
+            }
+        } else {
+            for (int i = 0; i < arr.length-spaces; i++){
+                temp[x] = arr[i];
+                x++;
+            }
+        }
+		
+		return temp;
+	}
+	
+	public static int[] rotate (int[]arr, char direction,int spaces) {
+		int[]temp = new int [arr.length];
+		int j = 0; 
+		int x = spaces;
+		
+		if (direction == 'l') {
+		    for (int i = 0; i < arr.length - spaces; i++) {
+		        temp[i] = arr[i+spaces];
+		    }   
+		    for (int i = arr.length-spaces; i < arr.length; i++) {
+		        temp[i] = arr[j];
+		        j++;
+		    }
+		} else {
+		    for (int i = 0; i < spaces; i++) {
+		        temp[i] = arr[arr.length-spaces+i];
+		    }
+		    for (int i = spaces; i < arr.length; i++) {
+		        temp[i] = arr[i-spaces];
+		    }
+		    
+		}
+       
+    return temp;        
+	}
+}
+
+data.txt:
+--------
+10 12 18 3
+6 9 -19 4
+3 -10 -1 6
+5 -5 7 17
+
+MyProgram.java:
+--------------
+public class MyProgram
+{
+    public static void main(String[] args)
+    {
+        //fill an array with random integers from 1 through 100
+		int x = 20;
+		int[] arr = new int[x];
+		
+		//use a regular for-loop to alter/fill 
+		//the array
+		for (int i = 0; i<x; i++){
+			int random = (int)(Math.random()*100+1);
+			arr[i]= random;
+		} 
+		//use a for-each loop to access and print the array
+		//you may NOT use a for-each loop to alter the array
+		System.out.println("\n **contents of the array**");
+		for(int value:arr)
+			System.out.print(value + " ");
+			
+		//call a static method to find the max
+		//value of the array and print it out
+		//call all other methods.
+		System.out.println("The max is: " + ArrayUtil.findMax(arr));
+		System.out.println("The min is: " + ArrayUtil.findMin(arr));
+		System.out.println("The sum is: " + ArrayUtil.arrSum(arr));
+		System.out.println("The average is: " + ArrayUtil.arrAverage(arr));
+		System.out.println("find duplicate: "+ ArrayUtil.hasDuplicate(arr));
+		System.out.println("find a value 5: "+ ArrayUtil.hasValue(arr, 5));
+		
+
+		
+		
+		int []rev = ArrayUtil.reverse(arr);
+		System.out.println("\n\n **contents of the reverse array**");
+		for(int value:rev)
+			System.out.print(value+ " ");
+		
+		rev = ArrayUtil.shift(arr, 'l', 3);
+		System.out.println("\n\n **contents of the shift left 3 array**");
+		for(int value:rev)
+			System.out.print(value+ " ");
+		
+		
+		rev = ArrayUtil.shift(arr, 'r', 5);
+		System.out.println("\n\n **contents of the shift right 5 array**");
+		for(int value:rev)
+			System.out.print(value+ " ");
+		
+		System.out.println("\ntest");
+	
+		int [] arr3 = {1,1,2,3,5,8,13,21};
+		for (int i = 0; i<arr3.length; i++){
+			System.out.print (arr3[i]+ " ");
+		}	
+    }
+}
+
