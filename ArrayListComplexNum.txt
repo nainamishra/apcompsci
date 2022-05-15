@@ -1,0 +1,217 @@
+ALUtil.java:
+-----------
+import java.util.*;
+
+public class ALUtil {
+
+        // push method
+        public static boolean push (ArrayList <ComplexNum> cnList, ComplexNum item) {
+            
+            cnList.add(item);
+            
+            if (cnList.get(cnList.size()-1) == item) {
+                return true;
+            } else {
+                return false;
+            }
+            
+        }
+        
+     
+        // pop stack method
+        public static ComplexNum popS (ArrayList <ComplexNum> cnList) {
+            
+            ComplexNum temp = cnList.get(cnList.size()-1);
+            cnList.remove(cnList.get(cnList.size()-1));
+            return temp;
+            
+        }
+        
+        // pop queue method
+        public static ComplexNum popQ (ArrayList <ComplexNum> cnList) {
+            
+            ComplexNum temp = cnList.get(0);
+            cnList.remove(cnList.get(0));
+            return temp;
+            
+        }        
+        
+        // reverse method
+        public static void reverse (ArrayList <ComplexNum> cnList) {
+        
+            for (int i = 0; i < cnList.size()/2; i++) {
+                ComplexNum temp = cnList.get(i);
+                cnList.set(i, cnList.get(cnList.size()-i-1));
+                cnList.set(cnList.size()-i-1,temp);
+            }
+            
+        }
+}
+
+ComplexNum.java:
+---------------
+public class ComplexNum implements Comparable<ComplexNum>{
+	private double real; // real part
+	private double imag; //imaginary part
+	private double r;
+	private double theta;
+	
+	//default constructor.
+	//set real = imag = 0;
+	public ComplexNum(){
+		real = 0;
+		imag = 0;
+		r = 0;
+		theta = 0;
+	}
+	
+	//specific constructor
+	//use this. keyword to set private variables
+	//set r and theta by using polarize method
+	public ComplexNum(double real, double imag){
+	  this.real = real;
+	  this.imag = imag;
+	  polarize();
+	}
+	
+	// return the real part
+	public double getReal(){
+		return real;
+	}
+	
+	// return the imaginary part
+	public double getImag(){
+		return imag;
+	}
+	
+	//add a complex number to this
+	//complex number. return a ComplexNum
+	public ComplexNum plus(ComplexNum a){	
+		double sumReal = this.real + a.real;
+		double sumImag = this.imag + a.imag;
+		return new ComplexNum(sumReal, sumImag);
+	}
+	
+	//subtract the passed object from the calling object
+	// return a complex number.
+	public ComplexNum minus(ComplexNum a){
+		double minusReal = this.real - a.real;
+		double minusImag = this.imag - a.imag;
+		return new ComplexNum(minusReal, minusImag);
+	}
+	
+	// multiply the passed object by the calling object
+	// return an object that is a complex number
+	public ComplexNum times (ComplexNum a){
+		double realSum = (this.real * a.real) + (this.imag * a.imag);
+		double realImag = (this.real * a.imag) + (this.imag * a.real);
+		return new ComplexNum(realSum, realImag);
+		
+	}
+	
+	// return the complex conjugate of the object
+	// return an object that is a complex number
+	public ComplexNum conjugate(){
+	    double conjugateImag = 0 - this.imag;
+	    return new ComplexNum(this.real, conjugateImag);
+	}
+	
+	// return the rationalized version of this complex number.
+	// 1/(a+bi) where a+bi is the current object
+	public ComplexNum rationalize(){
+	   double realNum = this.real/((this.real*this.real) + (this.imag*this.imag));
+	   double imagNum = (0-this.imag)/((this.real*this.real) + (this.imag*this.imag));
+	    
+	    return new ComplexNum(realNum, imagNum);
+	}
+	
+	// calculate r and theta given a and b
+	public void polarize(){
+	    r = Math.hypot(real,imag);
+	    theta = Math.atan2(real,imag);	
+		return;
+	}
+	
+	//used to see if two complex numbers are equal
+	// two complex numbers are equal if their real parts
+	// and imaginary parts are equal.
+	public boolean equals (ComplexNum second){
+	    //boolean equal;
+	    if (compareTo(second) == 0) {
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
+	
+	@Override
+	public int compareTo (ComplexNum second){
+	    if (Math.abs(this.r - second.r) < 0.01) {
+	        return 0;
+	    }
+	    
+	    if (this.r < second.r) {
+	        return -1;
+	    }
+	    
+	    return 1;
+	}
+	
+	// write code here to return a string
+	// in the form a + bi
+	public String toString(){
+	    if (imag > 0) {
+	        String temp = String.format("%.2f + %.2fi", real, imag);
+	        return temp;
+	    } else {
+	        String temp = String.format("%.2f %.2fi", real, imag);
+	        return temp;
+	    }
+	}
+}
+
+MyProgram.java:
+--------------
+import java.util.*;
+public class MyProgram {
+    public static void main(String[] args) {
+        ArrayList <ComplexNum> cnList = new ArrayList <ComplexNum>();
+        
+        ComplexNum n1 = new ComplexNum(4,5);
+        ALUtil.push(cnList, n1);
+        
+        for (int i = 1; i<6; i++){
+            int x = 1;
+            if (i % 2 == 0)
+                x = -x;
+            ALUtil.push(cnList, new ComplexNum (i*x, i * i));
+        }
+        System.out.println("1. " + cnList);
+        
+        System.out.println("2. " + ALUtil.popQ(cnList));
+        
+        System.out.println("3. " + ALUtil.popS(cnList));
+        
+        System.out.println("4. " + cnList);
+        
+        ALUtil.reverse(cnList);
+        System.out.println("5. " + cnList);
+        
+        System.out.println("6. " + ALUtil.popS(cnList));
+        
+        ComplexNum n2 = n1.minus(ALUtil.popQ(cnList));
+        
+        System.out.println("7. " + n2.toString());
+        
+        ALUtil.push(cnList, n2);
+        System.out.println("8. " + cnList);
+        
+        ALUtil.reverse(cnList);
+        System.out.println("9. " + cnList);
+        
+        n2 = n1.plus(n2);
+        ALUtil.push(cnList,n2);
+        System.out.println("10. " + cnList);
+    }
+}
+
